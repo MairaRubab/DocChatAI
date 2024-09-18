@@ -26,7 +26,7 @@ class Rag:
         self.model = ChatOpenAI(
         model="gpt-3.5-turbo",  
         temperature=0,  
-        openai_api_key="api") 
+        openai_api_key="API") 
 
     def set_retriever(self):
         self.retriever = self.vector_store.as_retriever(
