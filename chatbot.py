@@ -6,7 +6,7 @@ from rag import Rag
 
 def process_file():
     st.session_state.messages = []
-    st.session_state["assistant"].clear()        # Used in resetting the conversation when a new document is uploaded
+    st.session_state["assistant"].clear()        # Used in resetting the conversation when a new document is uploaded or any of the documents is deleted
     for file in st.session_state["file_uploader"]:
         with tempfile.NamedTemporaryFile(delete = False) as tf:
             tf.write(file.getbuffer())

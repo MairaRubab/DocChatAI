@@ -14,9 +14,12 @@ class Rag:
         self.csv_obj = cvs()
         self.prompt = PromptTemplate.from_template(
           """
-          You are an assistant for question-answering tasks. Use the following pieces of retrieved context
-          to answer the question. If you don't know the answer, just say that you don't know. Use three sentences
-          maximum and keep the answer concise.
+          You are an assistant for question-answering tasks. Use the following pieces of retrieved context 
+          to answer the question as thoroughly as possible. Pay close attention to every detail to ensure 
+          the answer is accurate and complete. Keep the tone conversational and engaging while ensuring 
+          the information comes directly from the provided context. If the exact answer isn't available, offer 
+          a helpful, closely related response or politely let the user know and provide any relevant additional 
+          insights that might be useful.
           Question: {question}
           Context: {context}
           Answer: 
@@ -24,14 +27,14 @@ class Rag:
           """)
         
         self.model = ChatOpenAI(
-        model="gpt-3.5-turbo",  
+        model="gpt-4-turbo",  
         temperature=0,  
         openai_api_key="API") 
 
     def set_retriever(self):
         self.retriever = self.vector_store.as_retriever(
         search_type="similarity_score_threshold",
-        search_kwargs={"k": 3, "score_threshold": 0.5,}        
+        search_kwargs={"k": 5, "score_threshold": 0.5,}        
         )
 
     # Augment the context to original prompt.
@@ -58,10 +61,10 @@ class Rag:
         self.set_retriever()
         self.augment()
 
-    # Used in resetting the conversation when a new document is uploaded 
+    # Used in resetting the conversation when a new document is uploaded or any of the uploaded documents is deleted
     def clear(self):
         self.vector_store = None                
         self.chain = None
         self.retriever = None
-    
+
     
