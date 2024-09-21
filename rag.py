@@ -14,12 +14,16 @@ class Rag:
         self.csv_obj = cvs()
         self.prompt = PromptTemplate.from_template(
           """
-          You are an assistant for question-answering tasks. Use the following pieces of retrieved context 
-          to answer the question as thoroughly as possible. Pay close attention to every detail to ensure 
-          the answer is accurate and complete. Keep the tone conversational and engaging while ensuring 
-          the information comes directly from the provided context. If the exact answer isn't available, offer 
-          a helpful, closely related response or politely let the user know and provide any relevant additional 
-          insights that might be useful.
+          You are an intelligent assistant designed to answer user questions effectively. 
+          Use the provided context to answer the question as thoroughly as possible. 
+          Pay close attention to every detail to ensure the answer is accurate, clear, and 
+          complete. Keep the tone conversational and engaging while ensuring the information 
+          comes directly from the context. If the exact answer is unavailable, offer a helpful, 
+          closely related response, and politely inform the user. For entirely irrelevant 
+          questions, provide correct and useful information based on your broader knowledge, 
+          clarifying that the response is not from the context. In the case of comments instead of 
+          questions, keep the response short and friendly.
+
           Question: {question}
           Context: {context}
           Answer: 
@@ -37,7 +41,6 @@ class Rag:
         search_kwargs={"k": 5, "score_threshold": 0.5,}        
         )
 
-    # Augment the context to original prompt.
     def augment(self):
         self.chain = (
             {"context": self.retriever, "question": RunnablePassthrough()}
@@ -46,14 +49,12 @@ class Rag:
             | StrOutputParser()
         )
 
-    # Generate the response.
     def ask(self, query: str):
         if not self.chain:
-            print("Upload a document first to set the context of conversation")
-        
+            return "Please upload the documents first to establish the context for the conversation"
+
         return self.chain.invoke(query)
     
-    # Stores the file into vector database
     def feed(self, file_path: str):
         chunks = self.csv_obj.split_into_chunks(file_path)
         self.vector_store = self.csv_obj.store_to_vector_database(chunks)
@@ -61,10 +62,10 @@ class Rag:
         self.set_retriever()
         self.augment()
 
-    # Used in resetting the conversation when a new document is uploaded or any of the uploaded documents is deleted
     def clear(self):
         self.vector_store = None                
         self.chain = None
         self.retriever = None
+
 
     

@@ -5,7 +5,6 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_openai import OpenAIEmbeddings
 
 
-
 class ChunkVectorStore:
 
   def __init__(self) -> None:

@@ -5,25 +5,23 @@ import os
 from rag import Rag                   
 
 def process_file():
-    st.session_state.messages = []
-    st.session_state["assistant"].clear()        # Used in resetting the conversation when a new document is uploaded or any of the documents is deleted
-    for file in st.session_state["file_uploader"]:
+      
+    uploaded_files = st.session_state.get("file_uploader", [])
+    for file in uploaded_files:
         with tempfile.NamedTemporaryFile(delete = False) as tf:
             tf.write(file.getbuffer())
             file_path = tf.name
 
-        with st.session_state["feeder_spinner"], st.spinner("Uploading the document"):
-            # Implement function to feed this file to vector storage
-            st.session_state["assistant"].feed(file_path)                                                             
+        with st.spinner("Uploading the document..."):   
+            st.session_state["assistant"].feed(file_path)                                                            
             
-        os.remove(file_path)  # To ensure file is removed after processing
+        os.remove(file_path) 
 
-# To display all the messages stored
 def display_messages():
     for messages in st.session_state.messages:
         with st.chat_message(messages["role"]):
             st.markdown(messages["content"])
-
+ 
 def process_input():
     if prompt := st.chat_input("How can I help?"):
         with st.chat_message("user"):
@@ -36,22 +34,56 @@ def process_input():
             st.markdown(response)
         
         st.session_state.messages.append({"role": "assistant", "content": response})
-# Main function to run the chatbot application   
+  
 def main():
-    st.title("Document Based Chatbot")
+
+    st.markdown("""
+        <style>
+            .title {
+                text-align: center;
+                font-size: 2em;
+            }
+            .icon {
+                vertical-align: middle;
+                margin-right: 10px;
+            }
+        </style>
+        <h1 class='title'>
+            DocChatAI
+            <img class='icon' src='https://img.icons8.com/ios-filled/50/chat.png' alt='Chatbot Icon'/>
+        </h1>
+    """, unsafe_allow_html=True)
+
     if len(st.session_state) == 0:
         st.session_state.messages = []
-        st.session_state["assistant"] = Rag()   
-
-    st.file_uploader("Upload the Document", type = ["pdf"], 
-                     key = "file_uploader", on_change = process_file,
-                     label_visibility = "collapsed", accept_multiple_files = True)
+        st.session_state["assistant"] = Rag()
     
-    st.session_state["feeder_spinner"] = st.empty()
+    st.sidebar.header("Upload the Documents")
 
+    st.sidebar.file_uploader("Upload the Document", type = ["pdf"], 
+                     key = "file_uploader", on_change = process_file,
+                     label_visibility = "collapsed", accept_multiple_files = True)  
+
+    if not st.session_state.get("file_uploader"):
+        st.warning("Please upload documents to start the conversation!")
+        return
+    
+    if st.sidebar.button("Reset"):
+        st.session_state.messages = []  
+        st.session_state["assistant"].clear()
+    
     display_messages()
     process_input()
 
-# Main call of our application
+    if st.session_state.messages:
+        conversation_text = "\n".join([f"{msg['role'].capitalize()}: {msg['content']}" 
+                                       for msg in st.session_state.messages])
+        st.download_button(
+            label="📥",
+            data=conversation_text,
+            file_name="conversation.txt",
+            mime="text/plain"
+        )
+    
 if __name__ == "__main__":
     main()
