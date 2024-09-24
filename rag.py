@@ -18,11 +18,9 @@ class Rag:
           Use the provided context to answer the question as thoroughly as possible. 
           Pay close attention to every detail to ensure the answer is accurate, clear, and 
           complete. Keep the tone conversational and engaging while ensuring the information 
-          comes directly from the context. If the exact answer is unavailable, offer a helpful, 
-          closely related response, and politely inform the user. For entirely irrelevant 
-          questions, provide correct and useful information based on your broader knowledge, 
-          clarifying that the response is not from the context. In the case of comments instead of 
-          questions, keep the response short and friendly.
+          comes directly from the context. If a question is irrelevant, politey inform the user 
+          that the information is not present.
+    
 
           Question: {question}
           Context: {context}
@@ -31,7 +29,7 @@ class Rag:
           """)
         
         self.model = ChatOpenAI(
-        model="gpt-4-turbo",  
+        model="gpt-4o-mini",  
         temperature=0,  
         openai_api_key="API") 
 
@@ -51,7 +49,7 @@ class Rag:
 
     def ask(self, query: str):
         if not self.chain:
-            return "Please upload the documents first to establish the context for the conversation"
+            return "Please upload the documents to start the conversation!"
 
         return self.chain.invoke(query)
     
