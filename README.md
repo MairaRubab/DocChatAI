@@ -17,15 +17,14 @@ These instructions will walk you through the process of setting up DocChatAI on 
 1. Set up project directory
 2. Install python 3.8 or higher (Used 3.10.9)
 3. Clone the repository:
-   git clone https://github.com/yourusername/DocChatAI.git
+    ```bash git clone https://github.com/yourusername/DocChatAI.git'''
 4. Navigate to the project directory:
-   cd DocChatAI
+   ```bash cd DocChatAI'''
 5. Install necessary dependencies:
-   pip install -r requirements.txt
+   ```bash pip install -r requirements.txt'''
 6. Create a virtual environment to isolate dependencies for your project. For Windows:
-   python -m venv venv
-   .\venv\Scripts\activate
-7. Create a config.toml file to configure global settings for Streamlit app, including parameters such as the application theme, server port, and other essential options.
+   ```bash python -m venv venv   .\venv\Scripts\activate'''
+7. Create a "config.toml" file to configure global settings for Streamlit app, including parameters such as the application theme, server port, and other essential options.
 8. Run the Streamlit app
-   streamlit run app.py
+   ```bash streamlit run app.py'''
 
