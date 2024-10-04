@@ -10,13 +10,18 @@ from rag import Rag
 def process_file():
       
     uploaded_files = st.session_state.get("file_uploader", [])
+    
+    if 'chunk_ids' not in st.session_state:
+        st.session_state['chunk_ids'] = [] 
+
     for file in uploaded_files:
         with tempfile.NamedTemporaryFile(delete = False) as tf:
             tf.write(file.getbuffer())
             file_path = tf.name
 
-        with st.spinner("Uploading the document..."):   
-            st.session_state["assistant"].feed(file_path)                                                            
+        with st.spinner("Uploading the document..."):    
+            chunk_ids = st.session_state["assistant"].feed(file_path)  
+            st.session_state['chunk_ids'].extend(chunk_ids)                                                          
             
         os.remove(file_path) 
 
@@ -41,7 +46,9 @@ def process_input():
 def generate_pdf(conversation_text):
     pdf = FPDF(format = 'A4')
     pdf.add_page()
-    pdf.set_font("Arial", size=10)
+    base_dejavu_path = 'resources'
+    pdf.add_font('DejaVu', '', os.path.join(base_dejavu_path, 'DejaVuSans.ttf'), uni=True) 
+    pdf.set_font("DejaVu", size=10)   
     pdf.set_left_margin(10)
     max_width = 190
     
@@ -82,11 +89,16 @@ def main():
         with open(image_path, "rb") as img_file:
             return base64.b64encode(img_file.read()).decode()
 
-    logo1 = get_base64_image("C:/Users/maira/OneDrive/Desktop/git_folder/DocChatAI/Maynooth_logo.png")
-    logo2 = get_base64_image("C:/Users/maira/OneDrive/Desktop/git_folder/DocChatAI/SFI_logo1.png")
-    logo3 = get_base64_image("C:/Users/maira/OneDrive/Desktop/git_folder/DocChatAI/SFI_logo2.png")
-    logo4 = get_base64_image("C:/Users/maira/OneDrive/Desktop/git_folder/DocChatAI/TCS_logo.png")
+    #logo1 = get_base64_image("C:/Users/maira/OneDrive/Desktop/git_folder/DocChatAI/Maynooth_logo.png")    #For local in Windows
+    #logo2 = get_base64_image("C:/Users/maira/OneDrive/Desktop/git_folder/DocChatAI/SFI_logo1.png")
+    #logo3 = get_base64_image("C:/Users/maira/OneDrive/Desktop/git_folder/DocChatAI/SFI_logo2.png")
+    #logo4 = get_base64_image("C:/Users/maira/OneDrive/Desktop/git_folder/DocChatAI/TCS_logo.png")
     
+    logo1 = get_base64_image("Maynooth_logo.png")    # for AWS Linux EC2 instance deployment
+    logo2 = get_base64_image("SFI_logo1.png")
+    logo3 = get_base64_image("SFI_logo2.png")
+    logo4 = get_base64_image("TCS_logo.png")
+
     st.markdown(
         f"""
         <style>
@@ -137,7 +149,9 @@ def main():
 
     if st.sidebar.button("Reset"):
         st.session_state.messages = []  
-        st.session_state["assistant"].clear()
+        if "chunk_ids" in st.session_state:
+            st.session_state["assistant"].clear(st.session_state['chunk_ids'])
+            st.session_state['chunk_ids'] = [] 
 
     display_messages()
     process_input()
