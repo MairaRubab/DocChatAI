@@ -3,6 +3,7 @@ from langchain.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI        
 from langchain.schema.runnable import RunnablePassthrough
 from langchain.schema.output_parser import StrOutputParser
+import os
 
 class Rag:
 
@@ -31,7 +32,7 @@ class Rag:
         self.model = ChatOpenAI(
         model="gpt-4o-mini",  
         temperature=0,  
-        openai_api_key="API") 
+        openai_api_key=os.getenv("OPENAI_API_KEY"))
 
     def set_retriever(self):
         self.retriever = self.vector_store.as_retriever(

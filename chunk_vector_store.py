@@ -3,7 +3,8 @@ from langchain_community.vectorstores.utils import filter_complex_metadata
 from langchain_community.vectorstores import chroma
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_openai import OpenAIEmbeddings
-import uuid  #new
+import uuid  
+import os
 
 class ChunkVectorStore:
 
@@ -27,7 +28,7 @@ class ChunkVectorStore:
   def store_to_vector_database(self, chunks):
     vector_store = chroma.Chroma.from_documents(
         documents=chunks, 
-        embedding=OpenAIEmbeddings(model="text-embedding-ada-002", api_key="API")
+        embedding=OpenAIEmbeddings(model="text-embedding-ada-002", api_key=os.getenv("OPENAI_API_KEY"))
     )
 
     chunk_ids = [chunk.metadata['id'] for chunk in chunks] 
