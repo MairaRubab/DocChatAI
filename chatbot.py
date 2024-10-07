@@ -89,15 +89,15 @@ def main():
         with open(image_path, "rb") as img_file:
             return base64.b64encode(img_file.read()).decode()
 
-    logo1 = get_base64_image("C:/Users/maira/OneDrive/Desktop/git_folder/DocChatAI/Maynooth_logo.png")    #For local in Windows
-    logo2 = get_base64_image("C:/Users/maira/OneDrive/Desktop/git_folder/DocChatAI/SFI_logo1.png")
-    logo3 = get_base64_image("C:/Users/maira/OneDrive/Desktop/git_folder/DocChatAI/SFI_logo2.png")
-    logo4 = get_base64_image("C:/Users/maira/OneDrive/Desktop/git_folder/DocChatAI/TCS_logo.png")
+    #logo1 = get_base64_image("C:/Users/maira/OneDrive/Desktop/git_folder/DocChatAI/Maynooth_logo.png")    #For local in Windows
+    #logo2 = get_base64_image("C:/Users/maira/OneDrive/Desktop/git_folder/DocChatAI/SFI_logo1.png")
+    #logo3 = get_base64_image("C:/Users/maira/OneDrive/Desktop/git_folder/DocChatAI/SFI_logo2.png")
+    #logo4 = get_base64_image("C:/Users/maira/OneDrive/Desktop/git_folder/DocChatAI/TCS_logo.png")
     
-    #logo1 = get_base64_image("Maynooth_logo.png")    # for AWS Linux EC2 instance deployment
-    #logo2 = get_base64_image("SFI_logo1.png")
-    #logo3 = get_base64_image("SFI_logo2.png")
-    #logo4 = get_base64_image("TCS_logo.png")
+    logo1 = get_base64_image("Maynooth_logo.png")    # for AWS Linux EC2 instance deployment
+    logo2 = get_base64_image("SFI_logo1.png")
+    logo3 = get_base64_image("SFI_logo2.png")
+    logo4 = get_base64_image("TCS_logo.png")
 
     st.markdown(
         f"""
