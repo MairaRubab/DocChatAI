@@ -5,11 +5,18 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_openai import OpenAIEmbeddings
 import uuid  
 import os
+import chromadb
 
 class ChunkVectorStore:
 
   def __init__(self) -> None:
-    pass
+        
+        self.client = chromadb.Client()
+        self.collection_name = "my_collection"
+        try:
+            self.client.get_collection(self.collection_name)
+        except ValueError:
+            self.client.create_collection(self.collection_name)
 
   def split_into_chunks(self, file_path: str):
     doc = PyPDFLoader(file_path).load()
