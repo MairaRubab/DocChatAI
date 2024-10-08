@@ -94,6 +94,7 @@ def main():
     #logo3 = get_base64_image("C:/Users/maira/OneDrive/Desktop/git_folder/DocChatAI/SFI_logo2.png")
     #logo4 = get_base64_image("C:/Users/maira/OneDrive/Desktop/git_folder/DocChatAI/TCS_logo.png")
     
+    
     logo1 = get_base64_image("Maynooth_logo.png")    # for AWS Linux EC2 instance deployment
     logo2 = get_base64_image("SFI_logo1.png")
     logo3 = get_base64_image("SFI_logo2.png")
