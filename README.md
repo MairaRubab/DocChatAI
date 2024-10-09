@@ -30,7 +30,19 @@ These instructions will walk you through the process of setting up DocChatAI on 
    python -m venv venv
    .\venv\Scripts\activate
 7. Create a "config.toml" file to configure global settings for Streamlit app, including parameters such as the application theme, server port, and other essential options.
-8. Run the Streamlit app
+8. Run the Streamlit app:
    ```bash
    streamlit run app.py
+
+# For Docker Usage
+1. Build the docker image:
+   ```bash
+   docker build -t project-image .
+2. Run the docker container:
+   ```bash
+   docker run -d -p 8501:8501 --name project-container project-image
+   
+**Note**: If requirements.txt doesn't have all the dependencies installed before making the docker image, use the following command to put all dependencies from the virtual environment to requirements.txt 
+   ```bash
+   pip freeze > requirements.txt
 
