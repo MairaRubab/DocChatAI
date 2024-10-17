@@ -44,23 +44,23 @@ def process_input():
         st.session_state.messages.append({"role": "assistant", "content": response})
 
 def generate_pdf(conversation_text):
-    pdf = FPDF(format = 'A4')
+    pdf = FPDF(format='A4')
     pdf.add_page()
     base_dejavu_path = 'resources'
-    pdf.add_font('DejaVu', '', os.path.join(base_dejavu_path, 'DejaVuSans.ttf'), uni=True) 
-    pdf.set_font("DejaVu", size=10)   
+    pdf.add_font('DejaVu', '', os.path.join(base_dejavu_path, 'DejaVuSans.ttf'), uni=True)
+    pdf.set_font("DejaVu", size=10)
     pdf.set_left_margin(10)
     max_width = 190
     
     lines = conversation_text.split("\n")
     for line in lines:
-        pdf.multi_cell(max_width, 7 , txt=line, align = 'L')
-
+        pdf.multi_cell(max_width, 7, txt=line, align='L')
         pdf.set_x(10)
     
-    buffer = BytesIO()
-    pdf.output(buffer)
-    buffer.seek(0)
+    buffer = BytesIO()  
+    pdf_output = pdf.output(dest='S').encode('latin1')  
+    buffer.write(pdf_output)  
+    buffer.seek(0)  
     
     return buffer
 
