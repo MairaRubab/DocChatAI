@@ -64,7 +64,10 @@ class Rag:
 
     def clear(self, chunk_ids: list):     
         if self.vector_store:
-            self.vector_store.delete(chunk_ids)                
+            batch_size = 166 
+            for i in range(0, len(chunk_ids), batch_size):
+                batch = chunk_ids[i:i + batch_size]
+                self.vector_store.delete(batch)
         self.chain = None
         self.retriever = None
 

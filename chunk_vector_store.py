@@ -5,6 +5,7 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_openai import OpenAIEmbeddings
 import uuid  
 import os
+import math
 
 class ChunkVectorStore:
 
@@ -25,14 +26,23 @@ class ChunkVectorStore:
 
     return chunks
   
-  def store_to_vector_database(self, chunks):
-    vector_store = chroma.Chroma.from_documents(
-        documents=chunks, 
-        embedding=OpenAIEmbeddings(model="text-embedding-ada-002", api_key=os.getenv("OPENAI_API_KEY"))
-    )
+  def store_to_vector_database(self, chunks, batch_size=166):
+    all_chunk_ids = []
 
-    chunk_ids = [chunk.metadata['id'] for chunk in chunks] 
-    return vector_store, chunk_ids  
+    num_batches = math.ceil(len(chunks) / batch_size)
+
+    for i in range(num_batches):
+        start_idx = i * batch_size
+        end_idx = start_idx + batch_size
+        batch_chunks = chunks[start_idx:end_idx]
+
+        vector_store = chroma.Chroma.from_documents(
+            documents=batch_chunks,
+            embedding=OpenAIEmbeddings(model="text-embedding-ada-002", api_key=os.getenv("OPENAI_API_KEY"))
+            )
+        batch_chunk_ids = [chunk.metadata['id'] for chunk in batch_chunks]
+        all_chunk_ids.extend(batch_chunk_ids) 
+    return vector_store, all_chunk_ids
   
   def delete_chunks(self, chunk_ids: list):
     self.vector_store.delete(ids=chunk_ids)  
