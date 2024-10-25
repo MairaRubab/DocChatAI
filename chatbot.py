@@ -113,6 +113,12 @@ def main():
             margin-top: 50px;
             left: 14.5%;
         }}
+
+        .footer-text {{
+            font-size: 12px;
+            color: #333;
+            margin-top: 10px;
+        }}
         </style>
         
         <div class="footer">
@@ -120,11 +126,14 @@ def main():
             <img src="data:image/png;base64,{logo2}" alt="Logo 2" style="height: 40px; margin: 0 2px;">
             <img src="data:image/png;base64,{logo3}" alt="Logo 3" style="height: 60px; margin: 0 2px;">
             <img src="data:image/png;base64,{logo4}" alt="Logo 4" style="height: 45px; margin: 0 2px;">
+            <div class="footer-text">
+                &copy; 2024 Maira Rubab (PhD Intern) | Tata Consultancy Services | Maynooth University | Ireland
+            </div>
         </div>
         """,
         unsafe_allow_html=True
     )
-
+    
     if len(st.session_state) == 0:
         st.session_state.messages = []
         st.session_state["assistant"] = Rag()
